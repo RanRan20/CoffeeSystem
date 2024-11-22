@@ -1,0 +1,2 @@
+Coffee: lomen, Price: 23.0, Client: checheo
+Coffee: mfm, Price: 8299.0, Client: miguel

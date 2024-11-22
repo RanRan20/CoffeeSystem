@@ -1,0 +1,8 @@
+Coffee: acas, Price: 24.24, Client: carlos
+Coffee: sonfa, Price: 25445.0, Client: limonsa
+Coffee: lemen, Price: 24.24, Client: sofia
+Coffee: liset, Price: 24.54, Client: sofiss
+Coffee: carlo, Price: 454545.0, Client: safiro
+Coffee: lif, Price: 2412.0, Client: limpa
+Coffee: lfaf, Price: 2577.0, Client: uff
+Coffee: sdsd, Price: 4545.0, Client: lssa
