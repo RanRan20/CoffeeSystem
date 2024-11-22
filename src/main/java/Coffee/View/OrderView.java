@@ -44,12 +44,12 @@ import javax.swing.ImageIcon;
 public class OrderView {
 
     private JFrame frame;
-    private JPanel panelRight; 
-    private JPanel panelLeft;  
+    private JPanel panelRight;
+    private JPanel panelLeft;
     private JTextField fieldCoffeeName;
     private JTextField fieldPrice;
     private JTextField fieldClient;
-    private DefaultListModel<String> modelListOrder;  
+    private DefaultListModel<String> modelListOrder;
     private JList<String> listOrder;
     private OrderController orderController;
     private int selectedIndex = -1;
@@ -132,7 +132,6 @@ public class OrderView {
 
         frame.setVisible(true);
 
-        
         listOrder.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 selectedIndex = listOrder.getSelectedIndex();
@@ -141,6 +140,39 @@ public class OrderView {
                     fieldCoffeeName.setText(selectedOrder.getCoffee().getName());
                     fieldPrice.setText(String.valueOf(selectedOrder.getCoffee().getPrice()));
                     fieldClient.setText(selectedOrder.getClient());
+                }
+            }
+        });
+
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String coffeeName = fieldCoffeeName.getText();
+                String price = fieldPrice.getText();
+                String client = fieldClient.getText();
+
+                if (!coffeeName.isEmpty() && !price.isEmpty() && !client.isEmpty()) {
+                    try {
+                        double priceValue = Double.parseDouble(price);  
+                        if (priceValue > 0) {             
+                            Coffee coffee = new Coffee(coffeeName, priceValue);  
+                            Order order = new Order(coffee, client);
+                            orderController.AddOrder(order);
+
+                            modelListOrder.addElement(order.toString());
+                            saveOrderToFile(order);
+
+                            fieldCoffeeName.setText("");
+                            fieldPrice.setText("");
+                            fieldClient.setText("");
+                        } else {
+                            JOptionPane.showMessageDialog(frame, "Enter a positive value");
+                        }
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(frame, "Enter a valid number for the price");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Please fill all the fields");
                 }
             }
         });
