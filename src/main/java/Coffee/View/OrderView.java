@@ -31,6 +31,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import Coffee.Controller.OrderController;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.Toolkit;
 import javax.imageio.ImageIO;
@@ -82,10 +83,13 @@ public class OrderView {
         gbc.gridy = 0;
 
         JLabel labelNameCoffee = new JLabel("Name of coffee:");
+        labelNameCoffee.setFont(new Font("Arial", Font.BOLD, 14));
         fieldCoffeeName = new JTextField(15);
         JLabel labelPriceCoffee = new JLabel("Price:");
+        labelPriceCoffee.setFont(new Font("Arial", Font.BOLD, 14));
         fieldPrice = new JTextField(15);
         JLabel labelClient = new JLabel("Client:");
+        labelClient.setFont(new Font("Arial", Font.BOLD, 14));
         fieldClient = new JTextField(15);
 
         panelRight.add(labelNameCoffee, gbc);
