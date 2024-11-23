@@ -128,7 +128,9 @@ public class OrderView {
         scrollPane.getViewport().setBackground(Color.decode("#B7906A"));
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
-        panelLeft.add(new JLabel("Orders", JLabel.CENTER), BorderLayout.NORTH);
+        JLabel ordersLabel = new JLabel("Orders", JLabel.CENTER);
+        ordersLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        panelLeft.add(ordersLabel, BorderLayout.NORTH);
         panelLeft.add(scrollPane, BorderLayout.CENTER);
 
         frame.add(panelRight, BorderLayout.EAST);
