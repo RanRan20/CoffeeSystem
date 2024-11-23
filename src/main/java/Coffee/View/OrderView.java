@@ -68,12 +68,12 @@ public class OrderView {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 400);
         frame.setLayout(new BorderLayout());
-        
+
         ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource("icon.png"));
         frame.setIconImage(icon.getImage());
 
         panelRight = new JPanel(new GridBagLayout());
-        panelRight.setBackground(Color.decode("#9A7959")); 
+        panelRight.setBackground(Color.decode("#9A7959"));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -102,33 +102,33 @@ public class OrderView {
 
         addButton = new JButton("Add Order");
         gbc.gridy++;
-        panelRight.add(addButton, gbc); 
-        
+        panelRight.add(addButton, gbc);
+
         deleteButton = new JButton("Delete");
         gbc.gridy++;
         panelRight.add(deleteButton, gbc);
-        
-        editButton = new JButton("Edit Order");  
+
+        editButton = new JButton("Edit Order");
         gbc.gridy++;
-        panelRight.add(editButton, gbc); 
+        panelRight.add(editButton, gbc);
 
         panelLeft = new JPanel(new BorderLayout());
-        panelLeft.setBackground(Color.decode("#C29A71")); 
+        panelLeft.setBackground(Color.decode("#C29A71"));
 
         modelListOrder = new DefaultListModel<>();
         listOrder = new JList<>(modelListOrder);
-        listOrder.setBackground(Color.decode("#C29A71")); 
+        listOrder.setBackground(Color.decode("#C29A71"));
 
         JScrollPane scrollPane = new JScrollPane(listOrder);
-        scrollPane.setBackground(Color.decode("#B7906A")); 
-        scrollPane.getViewport().setBackground(Color.decode("#B7906A")); 
+        scrollPane.setBackground(Color.decode("#B7906A"));
+        scrollPane.getViewport().setBackground(Color.decode("#B7906A"));
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
         panelLeft.add(new JLabel("Orders", JLabel.CENTER), BorderLayout.NORTH);
         panelLeft.add(scrollPane, BorderLayout.CENTER);
 
-        frame.add(panelRight, BorderLayout.EAST);  
-        frame.add(panelLeft, BorderLayout.CENTER); 
+        frame.add(panelRight, BorderLayout.EAST);
+        frame.add(panelLeft, BorderLayout.CENTER);
 
         frame.setVisible(true);
 
@@ -153,9 +153,9 @@ public class OrderView {
 
                 if (!coffeeName.isEmpty() && !price.isEmpty() && !client.isEmpty()) {
                     try {
-                        double priceValue = Double.parseDouble(price);  
-                        if (priceValue > 0) {             
-                            Coffee coffee = new Coffee(coffeeName, priceValue);  
+                        double priceValue = Double.parseDouble(price);
+                        if (priceValue > 0) {
+                            Coffee coffee = new Coffee(coffeeName, priceValue);
                             Order order = new Order(coffee, client);
                             orderController.AddOrder(order);
 
@@ -173,6 +173,24 @@ public class OrderView {
                     }
                 } else {
                     JOptionPane.showMessageDialog(frame, "Please fill all the fields");
+                }
+            }
+        });
+
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = listOrder.getSelectedIndex();
+                if (selectedIndex != -1) {
+                    int response = JOptionPane.showConfirmDialog(frame,
+                        "Do you want to delete this order?",
+                        "Delete Order", JOptionPane.YES_NO_OPTION);
+                    if (response == JOptionPane.YES_OPTION) {
+                        orderController.removeOrder(selectedIndex);
+                        modelListOrder.remove(selectedIndex);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Select an order to delete.");
                 }
             }
         });
@@ -194,7 +212,7 @@ public class OrderView {
             writer.newLine();
         } catch (IOException e) {
             e.printStackTrace();
-        }   
+        }
     }
 
     private void updateOrderInFile() {
