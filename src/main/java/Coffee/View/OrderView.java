@@ -194,6 +194,35 @@ public class OrderView {
                 }
             }
         });
+
+        editButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (selectedIndex != -1) {
+                    String coffeeName = fieldCoffeeName.getText();
+                    String price = fieldPrice.getText();
+                    String client = fieldClient.getText();
+
+                    if (!coffeeName.isEmpty() && !price.isEmpty() && !client.isEmpty()) {
+                        Coffee updatedCoffee = new Coffee(coffeeName, Double.parseDouble(price));
+                        Order updatedOrder = new Order(updatedCoffee, client);
+
+                        orderController.updateOrder(selectedIndex, updatedOrder);
+                        modelListOrder.set(selectedIndex, updatedOrder.toString());
+
+                        updateOrderInFile();
+
+                        fieldCoffeeName.setText("");
+                        fieldPrice.setText("");
+                        fieldClient.setText("");
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Please fill all fields!");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(frame, "No order selected!");
+                }
+            }
+        });
     }
 
     private void saveOrderToFile(Order order) {
