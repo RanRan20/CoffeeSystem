@@ -44,12 +44,12 @@ import javax.swing.ImageIcon;
 public class OrderView {
 
     private JFrame frame;
-    private JPanel panelRight; 
-    private JPanel panelLeft;  
+    private JPanel panelRight;
+    private JPanel panelLeft;
     private JTextField fieldCoffeeName;
     private JTextField fieldPrice;
     private JTextField fieldClient;
-    private DefaultListModel<String> modelListOrder;  
+    private DefaultListModel<String> modelListOrder;
     private JList<String> listOrder;
     private OrderController orderController;
     private int selectedIndex = -1;
@@ -68,12 +68,12 @@ public class OrderView {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 400);
         frame.setLayout(new BorderLayout());
-        
+
         ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource("icon.png"));
         frame.setIconImage(icon.getImage());
 
         panelRight = new JPanel(new GridBagLayout());
-        panelRight.setBackground(Color.decode("#9A7959")); 
+        panelRight.setBackground(Color.decode("#9A7959"));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -102,37 +102,36 @@ public class OrderView {
 
         addButton = new JButton("Add Order");
         gbc.gridy++;
-        panelRight.add(addButton, gbc); 
-        
+        panelRight.add(addButton, gbc);
+
         deleteButton = new JButton("Delete");
         gbc.gridy++;
         panelRight.add(deleteButton, gbc);
-        
-        editButton = new JButton("Edit Order");  
+
+        editButton = new JButton("Edit Order");
         gbc.gridy++;
-        panelRight.add(editButton, gbc); 
+        panelRight.add(editButton, gbc);
 
         panelLeft = new JPanel(new BorderLayout());
-        panelLeft.setBackground(Color.decode("#C29A71")); 
+        panelLeft.setBackground(Color.decode("#C29A71"));
 
         modelListOrder = new DefaultListModel<>();
         listOrder = new JList<>(modelListOrder);
-        listOrder.setBackground(Color.decode("#C29A71")); 
+        listOrder.setBackground(Color.decode("#C29A71"));
 
         JScrollPane scrollPane = new JScrollPane(listOrder);
-        scrollPane.setBackground(Color.decode("#B7906A")); 
-        scrollPane.getViewport().setBackground(Color.decode("#B7906A")); 
+        scrollPane.setBackground(Color.decode("#B7906A"));
+        scrollPane.getViewport().setBackground(Color.decode("#B7906A"));
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
         panelLeft.add(new JLabel("Orders", JLabel.CENTER), BorderLayout.NORTH);
         panelLeft.add(scrollPane, BorderLayout.CENTER);
 
-        frame.add(panelRight, BorderLayout.EAST);  
-        frame.add(panelLeft, BorderLayout.CENTER); 
+        frame.add(panelRight, BorderLayout.EAST);
+        frame.add(panelLeft, BorderLayout.CENTER);
 
         frame.setVisible(true);
 
-        
         listOrder.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 selectedIndex = listOrder.getSelectedIndex();
@@ -141,6 +140,86 @@ public class OrderView {
                     fieldCoffeeName.setText(selectedOrder.getCoffee().getName());
                     fieldPrice.setText(String.valueOf(selectedOrder.getCoffee().getPrice()));
                     fieldClient.setText(selectedOrder.getClient());
+                }
+            }
+        });
+
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String coffeeName = fieldCoffeeName.getText();
+                String price = fieldPrice.getText();
+                String client = fieldClient.getText();
+
+                if (!coffeeName.isEmpty() && !price.isEmpty() && !client.isEmpty()) {
+                    try {
+                        double priceValue = Double.parseDouble(price);
+                        if (priceValue > 0) {
+                            Coffee coffee = new Coffee(coffeeName, priceValue);
+                            Order order = new Order(coffee, client);
+                            orderController.AddOrder(order);
+
+                            modelListOrder.addElement(order.toString());
+                            saveOrderToFile(order);
+
+                            fieldCoffeeName.setText("");
+                            fieldPrice.setText("");
+                            fieldClient.setText("");
+                        } else {
+                            JOptionPane.showMessageDialog(frame, "Enter a positive value");
+                        }
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(frame, "Enter a valid number for the price");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Please fill all the fields");
+                }
+            }
+        });
+
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = listOrder.getSelectedIndex();
+                if (selectedIndex != -1) {
+                    int response = JOptionPane.showConfirmDialog(frame,
+                        "Do you want to delete this order?",
+                        "Delete Order", JOptionPane.YES_NO_OPTION);
+                    if (response == JOptionPane.YES_OPTION) {
+                        orderController.removeOrder(selectedIndex);
+                        modelListOrder.remove(selectedIndex);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Select an order to delete.");
+                }
+            }
+        });
+
+        editButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (selectedIndex != -1) {
+                    String coffeeName = fieldCoffeeName.getText();
+                    String price = fieldPrice.getText();
+                    String client = fieldClient.getText();
+
+                    if (!coffeeName.isEmpty() && !price.isEmpty() && !client.isEmpty()) {
+                        Coffee updatedCoffee = new Coffee(coffeeName, Double.parseDouble(price));
+                        Order updatedOrder = new Order(updatedCoffee, client);
+
+                        orderController.updateOrder(selectedIndex, updatedOrder);
+                        modelListOrder.set(selectedIndex, updatedOrder.toString());
+
+                        updateOrderInFile();
+
+                        fieldCoffeeName.setText("");
+                        fieldPrice.setText("");
+                        fieldClient.setText("");
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Please fill all fields!");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(frame, "No order selected!");
                 }
             }
         });
@@ -162,7 +241,7 @@ public class OrderView {
             writer.newLine();
         } catch (IOException e) {
             e.printStackTrace();
-        }   
+        }
     }
 
     private void updateOrderInFile() {
