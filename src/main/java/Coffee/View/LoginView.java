@@ -50,7 +50,7 @@ public class LoginView {
         frame.setIconImage(icon.getImage());
         
         panelLeft = new JPanel();
-        panelLeft.setBackground(Color.LIGHT_GRAY); 
+        panelLeft.setBackground(Color.decode("#513424")); 
         
         ImageIcon coffeeImage = new ImageIcon("coffee.jpg");
         JLabel coffeeLabel = new JLabel(coffeeImage);
@@ -74,7 +74,7 @@ public class LoginView {
        
         JLabel labelUsername = new JLabel("Username:");
         labelUsername.setForeground(Color.white);
-        labelUsername.setFont(new Font("Arial", Font.PLAIN, 15));
+        labelUsername.setFont(new Font("Arial", Font.BOLD, 16));
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.gridwidth = 1;
@@ -88,7 +88,7 @@ public class LoginView {
        
         JLabel labelPassword = new JLabel("Password:");
         labelPassword.setForeground(Color.white);
-        labelPassword.setFont(new Font("Arial", Font.PLAIN, 15));
+        labelPassword.setFont(new Font("Arial", Font.BOLD, 16));
         gbc.gridx = 0;
         gbc.gridy = 2;
         panelRight.add(labelPassword, gbc);
